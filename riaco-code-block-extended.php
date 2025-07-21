@@ -59,7 +59,10 @@ function riaco_cbe_guess_language_from_code( $code ) {
 	}
 
 	// Heuristic detection for CSS
-	if ( preg_match( '/\{[^}]*\}|;\s*$/m', $code ) && preg_match( '/[\.\#a-zA-Z][^{]*\s*\{/', $code ) ) {
+	if (
+		// Match common CSS patterns: selectors and declarations
+		preg_match( '/^[\s\S]*?\b[a-zA-Z\.\#][^{]*\s*\{\s*[a-zA-Z-]+\s*:\s*[^;]+;\s*\}/m', $code )
+	) {
 		return 'css';
 	}
 
