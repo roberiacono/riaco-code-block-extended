@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Code Block Extended
- * Description:       Extends the Code block.
+ * Description:       Extends the Code block to display different style for php and js codes using prism.js.
  * Version:           0.1.0
  * Requires at least: 6.7
  * Requires PHP:      7.4
@@ -47,7 +47,7 @@ add_action( 'wp_enqueue_scripts', 'riaco_code_block_extended_enqueue_frontend_cs
 
 
 
-function guess_language_from_code( $code ) {
+function riaco_cbe_guess_language_from_code( $code ) {
 	// Heuristic detection for PHP
 	if ( preg_match( '/<\?php|echo|->|require|include/', $code ) ) {
 		return 'php';
@@ -67,7 +67,7 @@ function guess_language_from_code( $code ) {
 }
 
 
-function add_prism_class_by_detected_language( $block_content, $block ) {
+function riaco_cbe_add_prism_class_by_detected_language( $block_content, $block ) {
 	// Make sure it's the core/code block and has content
 	if ( empty( $block['innerContent'][0] ) ) {
 		return $block_content;
@@ -77,7 +77,7 @@ function add_prism_class_by_detected_language( $block_content, $block ) {
 	$raw_code = trim( strip_tags( $block['innerContent'][0] ) );
 
 	// Detect language
-	$language = guess_language_from_code( $raw_code );
+	$language = riaco_cbe_guess_language_from_code( $raw_code );
 
 	// Inject Prism classes into <pre> and <code>
 	$processor = new WP_HTML_Tag_Processor( $block_content );
@@ -88,4 +88,4 @@ function add_prism_class_by_detected_language( $block_content, $block ) {
 
 	return $processor->get_updated_html();
 }
-add_filter( 'render_block_core/code', 'add_prism_class_by_detected_language', 10, 2 );
+add_filter( 'render_block_core/code', 'riaco_cbe_add_prism_class_by_detected_language', 10, 2 );
